@@ -116,6 +116,42 @@ PRO compare, cr09, cr0, cr4, cr3_4, karl
 
 END
 
+PRO plotcomp2, ssample1, ssample2, name
+
+	i = 0
+	dim_info = size(ssample1)
+	nprobs = dim_info[1]
+	n_stars = dim_info[2]
+	probs = fltarr(nprobs)
+	for i=0,nprobs-1 do begin
+		kstwo, ssample1[i,0:n_stars-1], ssample2[i,0:n_stars-1], D, prob
+		probs[i] = prob
+	endfor
+	print, "Probs:"
+	help, probs
+	print, probs
+
+	nbins = 20
+
+	myHist = histogram(probs, nbins=nbins)
+	binmin = 0
+	print, myHist / float(nprobs)
+	help, myHist
+	print, binmin
+	binwidth = (max(probs) - binmin)/nbins
+	print, max(probs)
+	print, binwidth
+	bins = findgen(nbins, increment=binwidth) + binwidth/2.0
+	;bins = [binwidth/2.0:10*binwidth+binwidth/2.0:binwidth]
+
+	print, myHist[0]/float(nprobs)
+	p = barplot(bins, myHist/float(nprobs), XTITLE = "Likelihood", $
+		YTITLE = "Probability")
+	p.Save, name 
+
+
+END
+
 PRO plotcomp, cr0, cr4, nprobs
 	N = 10
 	i = 0
@@ -145,6 +181,18 @@ PRO plotcomp, cr0, cr4, nprobs
 	plot, bins, myHist/float(nprobs), PSYM = 10
 END
 
+PRO saveplot
+	x = FINDGEN(41)/10 - 2
+	gauss = EXP(-x^2)
+	p = BARPLOT(x, gauss, $
+			TITLE='gaussian distriubtion', $
+			YRANGE=[0,1.1])
+	p.Save, "Gausssian.png", boarder=10, resolution=300, $
+				/TRANSPARENT
+	p1 = plot(x, gauss)
+	p1.save, "gaussian2.png"
+END
+
 PRO plothist
 	data = [[-5, 4, 2, -8, 1], $
 				  [ 3, 0, 5, -5, 1], $
@@ -156,4 +204,23 @@ PRO plothist
 	PRINT, bins
 	PLOT, bins, hist, YRANGE = [MIN(hist)-1, MAX(hist)+1], PSYM = 10, $
 		XTITLE = "Bin Number", YTITLE = "Density per bin"
+END
+
+PRO main
+	readin, cr09, cr0, cr4, cr3_4, karl
+
+	nsamples = 1000
+
+	supersample, cr09, nsamples, 10, cr09ss
+	supersample, cr0, nsamples, 10, cr0ss
+	supersample, karl, nsamples, 10, karlss
+	supersample, cr4, nsamples, 10, cr4ss
+
+	plotcomp2, cr0ss,  karlss, "cr0_karl.eps"
+	plotcomp2, cr0ss,  cr4ss,  "cr0_cr4.eps"
+	plotcomp2, cr0ss,  cr09ss, "cr0_cr09.eps"
+	plotcomp2, cr09ss, cr4ss,  "cr09_cr4.eps"
+	plotcomp2, cr09ss, karlss, "cr09_karl.eps"
+	plotcomp2, cr4ss,  karlss, "cr4_karl.eps"
+	
 END
