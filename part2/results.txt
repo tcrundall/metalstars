@@ -13,3 +13,44 @@ karl
   0.000170120 4 karl
   0.000170120 2009 karl
 
+100,000 samples:
+
+MYHIST          LONG      = Array[20]
+--------------------
+cr0_cr4_10.eps
+Fraction of realisations with <5% likelihoods
+     0.968250
+Fraction of realisations wiht <10% likelihoods
+     0.968250
+           1          20           3          20
+MYHIST          LONG      = Array[20]
+--------------------
+cr0_cr09_10.eps
+Fraction of realisations with <5% likelihoods
+     0.956890
+Fraction of realisations wiht <10% likelihoods
+     0.956890
+           1          20           3          20
+MYHIST          LONG      = Array[20]
+cr09_cr4_10.eps
+Fraction of realisations with <5% likelihoods
+     0.952860
+Fraction of realisations wiht <10% likelihoods
+     0.952860
+           1          20           3          20
+MYHIST          LONG      = Array[20]
+--------------------
+cr09_karl_10.eps
+Fraction of realisations with <5% likelihoods
+     0.989650
+Fraction of realisations wiht <10% likelihoods
+     0.989650
+           1          20           3          20
+MYHIST          LONG      = Array[20]
+--------------------
+cr4_karl_10.eps
+Fraction of realisations with <5% likelihoods
+     0.994620
+Fraction of realisations wiht <10% likelihoods
+     0.994620
+

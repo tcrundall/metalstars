@@ -69,8 +69,6 @@ PRO plotcomp, ssample1, ssample2, name
 	endfor
 	nbins = 20
 	myHist = histogram(probs, binsize=0.05, MIN=0.0, MAX=0.95)
-	print, size(myHist)
-	help, myHist
 
 	bins = [0.025:1.0:0.05]
 
@@ -88,8 +86,8 @@ END
 PRO main
 	readin, cr09, cr0, cr4, cr3_4, karl
 
-	nsamples = 100000
-	nstars = 10
+	nsamples = 1000
+	nstars = 100
 
 	supersample, cr09, nsamples, nstars, cr09ss
 	supersample, cr0,  nsamples, nstars, cr0ss
