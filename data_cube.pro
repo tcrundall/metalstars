@@ -24,4 +24,4 @@ For i=0,65 Do $
 	For j=0,50 Do $
 		data_2d(i,j) = median(data_t(i,j,*))
 
-
+print, data_2d

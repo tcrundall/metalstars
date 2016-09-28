@@ -1,0 +1,45 @@
+; a little program to read in some ASCII files and make sense of them
+;
+
+PRO readin
+	readcol, "Salvadori2007/mdfZcr0_2007.dat", c1, c2, c3
+	cr0 = transpose([[c1], [c2], [c3]])
+	help, cr0
+	;plot, c1[250:289], c2[250:289], line=0
+	
+	; get total stars with metallicity <= -4
+	cr0_total = total(cr0[1,0:270])
+	print, cr0_total
+	rand_n = cr0_total * randomu(Seed, 10)
+	print, rand_n
+	
+	
+	readcol, "Salvadori2007/mdfZcr4_2007.dat", c1, c2, c3
+	cr4 = transpose([[c1], [c2], [c3]])
+	help, cr4
+	;plot, c1, c2, line=0
+	
+	
+	readcol, "Salvadori2007/mdfZcr3_4_2007.dat", c1, c2, c3
+	cr3_4 = transpose([[c1], [c2], [c3]])
+	help, cr3_4
+	;plot, c1, c2, line=0
+	
+	
+	readcol, "Karlsson2006/HMP_MDF2006.tbl", c1, c2
+	karl = transpose([[c1],[c2]])
+	help, karl
+	;plot, c1, c2, line=0
+END
+
+PRO sample, data
+	for i = 0, 10 do begin
+		j = 0	
+		star_count = rand_n[i]
+		while (star_count GT 0) do begin
+			star_count -= data[1,j]
+			j++
+		endwhile
+		print, data[0,j]
+	endfor
+END
