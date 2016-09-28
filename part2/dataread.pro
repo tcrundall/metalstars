@@ -87,17 +87,17 @@ PRO main
 	readin, cr09, cr0, cr4, cr3_4, karl
 
 	nsamples = 1000
-	nstars = 100
+	nstars = 400
 
-	supersample, cr09, nsamples, nstars, cr09ss
+	;supersample, cr09, nsamples, nstars, cr09ss
 	supersample, cr0,  nsamples, nstars, cr0ss
 	supersample, karl, nsamples, nstars, karlss
-	supersample, cr4,  nsamples, nstars, cr4ss
+	;supersample, cr4,  nsamples, nstars, cr4ss
 
-	plotcomp, cr0ss,  karlss, "cr0_karl_10.eps"
+	plotcomp, cr0ss,  karlss, "cr0_karl_400.eps"
 	;plotcomp, cr0ss,  cr4ss,  "cr0_cr4_10.eps"
 	;plotcomp, cr0ss,  cr09ss, "cr0_cr09_10.eps"
-	plotcomp, cr09ss, cr4ss,  "cr09_cr4_10.eps"
+	;plotcomp, cr09ss, cr4ss,  "cr09_cr4_10.eps"
 	;plotcomp, cr09ss, karlss, "cr09_karl_10.eps"
 	;plotcomp, cr4ss,  karlss, "cr4_karl_10.eps"
 	
