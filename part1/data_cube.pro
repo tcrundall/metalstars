@@ -1,35 +1,31 @@
+; reads in a fits file and stores in out as [RA, Dec, wavelength]
 PRO readin, cubeno, out
 	filename = strjoin(["fits/s100303_", cubeno, "_Hn3_100.fits"])
 	FITS_READ, filename, data, header
-	;FITS_READ, 'data_cubes/s1.fits', data, header
-	; header
 	; dim1: wavelength      411
 	; dim2: right ascension  66
 	; dim3: declination      51
 	
-	;help, data
 	;print, 'want to transpose so dimensions are RA, Dec, wl'
-	;print, ' so 66, 51, 411'
-	data_t = transpose(data, [1,2,0])
-	
-	;print, 'should now read [66, 51, 411]...'
-	;help, data_t
-	
-	out = data_t
+	out = transpose(data, [1,2,0])
 END
 
 ; takes a row of fluxes and returns the index
 ; of the location of median flux
+; this is achieved by finding total flux (incremented so as to account
+; for negative fluxes) and finding the index in which the sum is half total
 PRO getmedix, data, out
 	length = 411
 
+	; each flux is incremented slightly to keep total positive
 	total_flux = total(data + 0.05)
 	raw_tflux = total(data)
 	half_f = 0.5 * total_flux
 
+	; debugging - since half_f isn't guaranteed to be positive before loop
+	; trial and error has assured this now
 	if (half_f LT 0) then print, half_f 
 
-	;stop
 	i = 0
 	while (half_f GT 0) do begin
 		half_f -= data[i] + 0.05
@@ -64,8 +60,11 @@ PRO wlcollapse, cube, result
 	endfor	
 END
 
+; a rough trapezoidal approximation of the h-alpha (#1) filter
 FUNCTION filter, wl 
 
+	; shift the observed wavelengths to corresponding wavelengths at
+	; rest given the redshift = 1.489
 	wl = wl/(1+1.489)
 	if (wl GT 664) and (wl LT 672) then return, -0.00125*wl + 0.84
 	if (wl LT 643) or  (wl GT 672) then return, 0.0
@@ -89,6 +88,7 @@ PRO halpha, cube, result
 	endfor
 END
 
+; write the halpha 2d image to a csv file
 PRO write, data, cubeno
 	filename = STRJOIN(["halphas/s100303_", cubeno, "_halpha.csv"])
 	$ touch halphas/c1cube.csv
@@ -96,6 +96,7 @@ PRO write, data, cubeno
 	WRITE_CSV, filename, data
 END
 
+; produce an halpha image for each fits file
 PRO main
 
 	files = ["a023003", "a023004", "a024001", "a024003", "a024004", "a025001", $
