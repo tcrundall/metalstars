@@ -1,5 +1,5 @@
 ; reads in a fits file and stores in out as [RA, Dec, wavelength]
-PRO readin, cubeno, out
+PRO readin, cubeno, out, out_header
 	filename = strjoin(["fits/s100303_", cubeno, "_Hn3_100.fits"])
 	FITS_READ, filename, data, header
 	; dim1: wavelength      411
@@ -8,6 +8,7 @@ PRO readin, cubeno, out
 	
 	;print, 'want to transpose so dimensions are RA, Dec, wl'
 	out = transpose(data, [1,2,0])
+	out_header = header
 END
 
 ; takes a row of fluxes and returns the index
@@ -66,10 +67,10 @@ FUNCTION filter, wl
 	; shift the observed wavelengths to corresponding wavelengths at
 	; rest given the redshift = 1.489
 	wl = wl/(1+1.489)
-	if (wl GT 664) and (wl LT 672) then return, -0.00125*wl + 0.84
-	if (wl LT 643) or  (wl GT 672) then return, 0.0
-	if (wl GT 643) and (wl LT 653) then return, 0.001*wl - 0.0643
-	if (wl GT 653) and (wl LT 664) then return, 1
+	if (wl LE 643) or  (wl GT 672) then return, 0.0
+	if (wl GE 643) and (wl LT 653) then return, 0.1 * (wl-643)
+	if (wl GE 653) and (wl LT 664) then return, 1
+	if (wl GE 664) and (wl LT 672) then return, -0.125 * (wl+672) 
 END
 
 ; convert wavelength to binary image where the wavelength
@@ -107,5 +108,6 @@ PRO main
 		readin, files[i], cube
 		halpha, cube, result
 		write, result, files[i] 
+		stop
 	endfor
 END
